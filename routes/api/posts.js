@@ -90,4 +90,100 @@ router.delete(
   }
 );
 
+// @route   POST api/posts/like/:id
+// @desc    Like a post by it's id
+// @access  Private
+router.post(
+  "/like/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id }).then((profile) => {
+      Post.findById(req.params.id)
+        .then((post) => {
+          if (
+            post.likes.filter((like) => like.user.toString() === req.user.id)
+              .length > 0
+          ) {
+            return res
+              .status(400)
+              .json({ alreadyLiked: "User already liked this post" });
+          }
+
+          // Add user to likes list
+          post.likes.unshift({ user: req.user.id });
+
+          post.save().then((post) => res.json(post));
+        })
+        .catch((err) => res.status(404).json({ noPost: "Post not found" }));
+    });
+  }
+);
+
+// @route   POST api/posts/unlike/:id
+// @desc    Unike a post by it's id
+// @access  Private
+router.post(
+  "/unlike/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id }).then((profile) => {
+      Post.findById(req.params.id)
+        .then((post) => {
+          if (
+            post.likes.filter((like) => like.user.toString() === req.user.id)
+              .length === 0
+          ) {
+            return res
+              .status(400)
+              .json({ notLiked: "You have not yet liked this post" });
+          }
+
+          // Get the remove index
+          const removeIndex = post.likes
+            .map((item) => item.user.toString())
+            .indexOf(req.user.id);
+
+          // Remove user from likes list
+          post.likes.splice(removeIndex, 1);
+
+          post.save().then((post) => res.json(post));
+        })
+        .catch((err) => res.status(404).json({ noPost: "Post not found" }));
+    });
+  }
+);
+
+// @route   POST api/posts/comment/:id
+// @desc    Add a comment to a post by id
+// @access  Private
+router.post(
+  "/comment/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    // We used the same validation file since the post and comment are similar
+    const { errors, isValid } = validatePostInput(req.body);
+
+    // check validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    Post.findById(req.params.id)
+      .then((post) => {
+        const newComment = {
+          text: req.body.text,
+          name: req.body.name,
+          avatar: req.body.avatar,
+          user: req.user.id,
+        };
+
+        // Add the new comment to comments list
+        post.comments.unshift(newComment);
+
+        post.save().then((post) => res.json(post));
+      })
+      .catch((err) => res.status(404).json({ noPost: "Post not found" }));
+  }
+);
+
 module.exports = router;
