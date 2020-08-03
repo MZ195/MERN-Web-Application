@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import { registerUser } from "../../../actions/authAction";
@@ -39,7 +40,8 @@ class Register extends Component {
       password2: this.state.password2,
     };
 
-    this.props.registerUser(newUser);
+    // will allow us to use this.props.history from registerUser action
+    this.props.registerUser(newUser, this.props.history);
   }
 
   render() {
@@ -132,6 +134,7 @@ class Register extends Component {
 Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -139,4 +142,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 });
 
-export default connect(mapStateToProps, { registerUser })(Register);
+export default connect(mapStateToProps, { registerUser })(withRouter(Register));
