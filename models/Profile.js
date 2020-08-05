@@ -7,7 +7,7 @@ const profileSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "users",
   },
-  handel: {
+  handle: {
     type: String,
     required: true,
     max: 40,

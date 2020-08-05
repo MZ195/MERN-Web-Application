@@ -64,7 +64,7 @@ router.post(
     // Get fields
     const profileFields = {};
     profileFields.user = req.user.id;
-    if (req.body.handel) profileFields.handel = req.body.handel;
+    if (req.body.handle) profileFields.handle = req.body.handle;
     if (req.body.company) profileFields.company = req.body.company;
     if (req.body.website) profileFields.website = req.body.website;
     if (req.body.location) profileFields.location = req.body.location;
@@ -99,10 +99,10 @@ router.post(
       } else {
         // Create new profile
 
-        // Check if the handel exists
-        Profile.findOne({ handel: profileFields.handel }).then((profile) => {
+        // Check if the handle exists
+        Profile.findOne({ handle: profileFields.handle }).then((profile) => {
           if (profile) {
-            errors.handel = "That handel aleady exists";
+            errors.handle = "That handle aleady exists";
             res.status(400).json(errors);
           }
         });
@@ -134,13 +134,13 @@ router.get("/all", (req, res) => {
     });
 });
 
-// @route   GET api/profile/handel/:handel
-// @desc    Get profile by handel
+// @route   GET api/profile/handle/:handle
+// @desc    Get profile by handle
 // @access  Public
-router.get("/handel/:handel", (req, res) => {
+router.get("/handle/:handle", (req, res) => {
   const errors = {};
 
-  Profile.findOne({ handel: req.params.handel })
+  Profile.findOne({ handle: req.params.handle })
     .populate("user", ["name", "avatar"])
     .then((profile) => {
       if (!profile) {

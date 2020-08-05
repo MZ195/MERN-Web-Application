@@ -4,16 +4,16 @@ const isEmpty = require("./is-empty");
 module.exports = function validateProfileInput(data) {
   let errors = {};
 
-  data.handel = !isEmpty(data.handel) ? data.handel : "";
+  data.handle = !isEmpty(data.handle) ? data.handle : "";
   data.status = !isEmpty(data.status) ? data.status : "";
   data.skills = !isEmpty(data.skills) ? data.skills : "";
 
-  if (!Validator.isLength(data.handel, { min: 2, max: 40 })) {
-    errors.handel = "Handel needs to be at least 2 characters";
+  if (!Validator.isLength(data.handle, { min: 2, max: 40 })) {
+    errors.handle = "handle needs to be at least 2 characters";
   }
 
-  if (Validator.isEmpty(data.handel)) {
-    errors.handel = "Profile handel is required";
+  if (Validator.isEmpty(data.handle)) {
+    errors.handle = "Profile handle is required";
   }
 
   if (Validator.isEmpty(data.status)) {
