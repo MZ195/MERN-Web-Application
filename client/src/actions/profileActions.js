@@ -65,10 +65,28 @@ export const addEducation = (eduData, history) => (dispatch) => {
     );
 };
 
-// Add education
+// Delete experience
 export const deleteExperience = (expId) => (dispatch) => {
   axios
     .delete(`/api/profile/experience/${expId}`)
+    .then((res) =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: res.data,
+      })
+    )
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
+// Delete education
+export const deleteEducation = (expId) => (dispatch) => {
+  axios
+    .delete(`/api/profile/education/${expId}`)
     .then((res) =>
       dispatch({
         type: GET_PROFILE,
