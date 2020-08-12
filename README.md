@@ -1,5 +1,5 @@
 # DevConnector
-A social media
+
 ## About:
 DevConnector is a social media platform for developers to connect and exchange information.
 Developers can create an account, add experiences/education, and Link their Github account to DevConnect.
